@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from database import db
 
 class Build(db.Model):
@@ -11,9 +13,9 @@ class Build(db.Model):
 
     test_runs = db.relationship('TestRun', backref='build', lazy=True)
 
-    def __init__(self, created, number):
-        self.created = created
+    def __init__(self, number, created=None):
         self.number = number
+        self.created = created or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def __repr__(self):
         return 'Build({})'.format(self.number)
