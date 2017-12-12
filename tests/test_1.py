@@ -8,3 +8,6 @@ class TestOne:
 
     def test_three_godzillas(self):
         pass
+
+    def test_three_king_kong(self):
+        assert False
