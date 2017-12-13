@@ -10,9 +10,16 @@ from models.project import Project
 # Blueprints
 from api.api import api
 
-app = Flask(__name__)
+app = Flask("alfred")
+
 app.config.from_pyfile('flask.cfg')
+
+# allow routes like /projects as well as /projects/
+app.url_map.strict_slashes = False
+
 app.register_blueprint(api)
+
+
 dtb = db.init_app(app)
 
 

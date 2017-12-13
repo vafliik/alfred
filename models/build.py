@@ -20,4 +20,4 @@ class Build(db.Model):
         self.comment = comment
 
     def __repr__(self):
-        return 'Build({})'.format(self.number)
+        return '<Build({})>'.format(self.build_nr)

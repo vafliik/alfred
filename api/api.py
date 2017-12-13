@@ -9,7 +9,6 @@ from models.project import Project
 
 api = Blueprint("api", "api", url_prefix="/api/v1")
 
-
 # PROJECTS
 
 @api.route('/projects', methods=['GET'])
