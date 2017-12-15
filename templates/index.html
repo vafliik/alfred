@@ -1,13 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-Hello Alfred. Does it come in black?
-{% for build in builds %}
-    {{ build }}
-{% endfor %}
-</body>
-</html>
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    Hello Alfred. What Project do we have here? Does it come in black?
+
+    <table style="width:90%" class="table">
+        <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Builds</th>
+        </tr>
+        </thead>
+        {% for project in projects %}
+            <tr>
+                <td>{{ project.id }}</td>
+                <td>{{ project.name }}</td>
+                <td>{{ project.builds|length }}</td>
+                <td><a href="{{ url_for('get_project', project_id=project.id) }}"
+                       class="btn btn-small btn-primary">Details</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

@@ -20,6 +20,7 @@ def get_projects():
             {
                 'id': project.id,
                 'name': project.name,
+                'builds': len(project.builds)
             }
         )
 
@@ -87,7 +88,7 @@ def get_build(build_nr, project_id=None, project_name=None):
 
 
 @api.route('/projects/<int:project_id>/builds', methods=['POST'])
-@api.route('/projects/<int:project_name>/builds', methods=['POST'])
+@api.route('/projects/<string:project_name>/builds', methods=['POST'])
 def create_build(project_id=None, project_name=None):
     project = get_project_by_id_or_name(project_id, project_name)
     payload = request.json
@@ -109,6 +110,21 @@ def update_build(build_nr, project_id=None, project_name=None):
     build.comment = payload.get("comment")
     db.session.commit()
     return jsonify(build_nr=build.build_nr, comment=build.comment), 200
+
+# TEST RUNS
+@api.route('/projects/<int:project_id>/builds/<build_nr>/runs', methods=['POST'])
+@api.route('/projects/<string:project_name>/builds/<build_nr>/runs', methods=['POST'])
+def create_run(build_nr, project_id=None, project_name=None):
+    project = get_project_by_id_or_name(project_id, project_name)
+    build = Build.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
+    payload = request.json
+    status = payload.get("status")
+    comment = payload.get("comment")
+
+    run = get_or_create(db.session, TestRun, build_nr=build_nr, status=status)
+    run.comment = comment
+    db.session.commit()
+    return jsonify(id=run.id, comment=run.comment), 201
 
 
 # Utils

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, request, jsonify
+from flask import Flask, render_template, make_response, request, jsonify, abort
 
 from database import db, get_or_create
 from models.build import Build
@@ -8,7 +8,7 @@ from models.test import Test
 from models.project import Project
 
 # Blueprints
-from api.api import api
+from api.api import api, get_project_by_id_or_name
 
 app = Flask("alfred")
 
@@ -19,50 +19,36 @@ app.url_map.strict_slashes = False
 
 app.register_blueprint(api)
 
-
 dtb = db.init_app(app)
-
 
 
 @app.route('/')
 def index():
-    all_builds = Build.query.all()
-    return render_template('index.html', title='Alfred', builds=all_builds)
+    projects = Project.query.all()
+    return render_template('index.html', title='Home', projects=projects)
 
+@app.route('/projects/<int:project_id>', methods=['GET'])
+@app.route('/projects/<string:project_name>', methods=['GET'])
+def get_project(project_id=None, project_name=None):
+    project = get_project_by_id_or_name(project_id, project_name)
+    if not project:
+        abort(404)
+    return render_template('project.html', title='Project', project=project)
 
-@app.route('/builds', methods=['GET'])
-def get_builds():
-    build_list = []
-    builds = Build.query.all()
-    for build in builds:
-        build_list.append(
-            {
-                'build_nr': build.build_nr,
-                'created': build.created,
-            }
-        )
+@app.route('/projects/<int:project_id>/builds/<build_nr>', methods=['GET'])
+@app.route('/projects/<string:project_name>/builds/<build_nr>', methods=['GET'])
+def get_build(build_nr, project_id=None, project_name=None):
+    project = get_project_by_id_or_name(project_id, project_name)
+    build = Build.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
+    return render_template('project.html', title='Build', build=build, project=project)
 
-    return jsonify(Builds=build_list)
-
-
-@app.route('/builds', methods=['POST'])
-def create_build():
-    payload = request.json
-    build_nr = payload.get("build_nr")
-    comment = payload.get("comment")
-
-    build = get_or_create(db.session, Build, project_id=1, build_nr=build_nr)
-    build.comment = comment
-    db.session.commit()
-    return jsonify(build_nr=build.build_nr, comment=build.comment), 201
-
-@app.route('/builds/<build_nr>', methods=['PATCH'])
-def update_build(build_nr):
-    build = Build.query.get(build_nr)
-    payload = request.json
-    build.comment = payload.get("comment")
-    db.session.commit()
-    return jsonify(build_nr=build.build_nr), 200
+@app.route('/projects/<int:project_id>/builds/<build_nr>/runs/<test_run_id>', methods=['GET'])
+@app.route('/projects/<string:project_name>/builds/<build_nr>/runs/<test_run_id>', methods=['GET'])
+def get_run(build_nr, test_run_id, project_id=None, project_name=None):
+    project = get_project_by_id_or_name(project_id, project_name)
+    build = Build.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
+    test_run = TestRun.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
+    return render_template('project.html', title='Build', build=build, project=project)
 
 
 @app.route('/report/<test_run_id>', methods=['GET'])
@@ -108,7 +94,10 @@ def save_test_list(test_run_id):
     response.headers['Content-Type'] = 'application/json'
     return response
 
-
+#  Error handlers
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
     host = '0.0.0.0'

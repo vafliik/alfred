@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <h2>{{ build.build_nr }}</h2>
+    This build belongs to project {{ project.name }}
+
+    <h3>Test Runs</h3>
+    <table style="width:90%" class="table">
+        <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>Created</th>
+            <th>Results</th>
+            <th>Status</th>
+            <th>Comment</th>
+        </tr>
+        </thead>
+        {% for run in build.test_runs %}
+            <tr>
+                <td>{{ run.id }}</td>
+                <td>{{ run.created }}</td>
+                <td>{{ run.results|length }}</td>
+                <td>{{ run.status }}</td>
+                <td>{{ run.comment }}</td>
+                <td><a href="{{ url_for('get_project', project_id=project.id) }}"
+                       class="btn btn-small btn-primary">Details</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

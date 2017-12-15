@@ -2,6 +2,8 @@ import tempfile
 
 import os
 import pytest
+from flask import Response
+
 import alfred_server
 import json
 
@@ -43,6 +45,7 @@ def test_empty_db(client):
 def test_create_project(client):
     rv = client.post("/api/v1/projects", content_type='application/json', data=json.dumps(dict(
         name="Ruzenka"
-    )))
+    )))  # type: Response
+    assert rv.status_code == 201
     assert json.loads(rv.data.decode())["id"] == 1
     assert json.loads(rv.data.decode())["name"] == "Ruzenka"

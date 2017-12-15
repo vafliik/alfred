@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <h2>{{ project.name }}</h2>
+    This is an exceptional project!
+
+    <h3>Builds</h3>
+    <table style="width:90%" class="table">
+        <thead>
+
+        <tr>
+            <th>Build #</th>
+            <th>Created</th>
+            <th>Test Runs</th>
+            <th>Comment</th>
+        </tr>
+        </thead>
+        {% for build in project.builds %}
+            <tr>
+                <td>{{ build.build_nr }}</td>
+                <td>{{ build.created }}</td>
+                <td>{{ build.test_runs|length }}</td>
+                <td>{{ build.comment }}</td>
+                <td><a href="{{ url_for('get_build', build_nr=build.build_nr, project_id=project.id) }}"
+                       class="btn btn-small btn-primary">Details</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
