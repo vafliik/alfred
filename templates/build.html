@@ -23,7 +23,7 @@
                 <td>{{ run.results|length }}</td>
                 <td>{{ run.status }}</td>
                 <td>{{ run.comment }}</td>
-                <td><a href="{{ url_for('get_project', project_id=project.id) }}"
+                <td><a href="{{ url_for('get_run', build_nr=build.build_nr, test_run_id=run.id, project_id=project.id) }}"
                        class="btn btn-small btn-primary">Details</a></td>
             </tr>
         {% endfor %}

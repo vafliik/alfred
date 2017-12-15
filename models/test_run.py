@@ -1,13 +1,16 @@
 from datetime import datetime
 
 from database import db
+from models.result import Result
+from models.test import Test
+
 
 class TestRun(db.Model):
 
     __tablename__ = "test_run"
 
     id = db.Column(db.Integer, primary_key=True)
-    build_id = db.Column(db.Integer, db.ForeignKey('build.build_nr'))
+    build_nr = db.Column(db.Integer, db.ForeignKey('build.build_nr'))
     created = db.Column(db.DateTime)
     status = db.Column(db.String)
     comment = db.Column(db.String)

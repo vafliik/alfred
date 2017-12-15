@@ -40,15 +40,16 @@ def get_project(project_id=None, project_name=None):
 def get_build(build_nr, project_id=None, project_name=None):
     project = get_project_by_id_or_name(project_id, project_name)
     build = Build.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
-    return render_template('project.html', title='Build', build=build, project=project)
+    return render_template('build.html', title='Build', build=build, project=project)
 
 @app.route('/projects/<int:project_id>/builds/<build_nr>/runs/<test_run_id>', methods=['GET'])
 @app.route('/projects/<string:project_name>/builds/<build_nr>/runs/<test_run_id>', methods=['GET'])
 def get_run(build_nr, test_run_id, project_id=None, project_name=None):
     project = get_project_by_id_or_name(project_id, project_name)
     build = Build.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
-    test_run = TestRun.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
-    return render_template('project.html', title='Build', build=build, project=project)
+    test_run = TestRun.query.filter_by(id=test_run_id, build_nr=build_nr).first_or_404()
+    test_results = Test
+    return render_template('test_run.html', title='Test Run', build=build, project=project, test_run=test_run)
 
 
 @app.route('/report/<test_run_id>', methods=['GET'])

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-    <h2>{{ build.build_nr }}</h2>
+    <h2>{{ test_run.id }}</h2>
     Test Run Forrest, Test Run!
 
     <h3>Results</h3>
@@ -10,17 +10,17 @@
 
         <tr>
             <th>ID</th>
-            <th>Created</th>
-            <th>Test Runs</th>
-            <th>Comment</th>
+            <th>Test Name</th>
+            <th>Status</th>
+            <th>Duration</th>
         </tr>
         </thead>
-        {% for build in project.builds %}
+        {% for result in test_run.results %}
             <tr>
-                <td>{{ build.build_nr }}</td>
-                <td>{{ build.created }}</td>
-                <td>{{ build.test_runs|length }}</td>
-                <td>{{ build.comment }}</td>
+                <td>{{ result.id }}</td>
+                <td>{{ result.test_id }}</td>
+                <td>{{ result.status }}</td>
+                <td>TBD</td>
                 <td><a href="{{ url_for('get_build', build_nr=build.build_nr, project_id=project.id) }}"
                        class="btn btn-small btn-primary">Details</a></td>
             </tr>
