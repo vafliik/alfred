@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, request, jsonify, abort
+from flask import Flask, render_template, make_response, request, jsonify, abort, send_from_directory
 
 from database import db, get_or_create
 from models.build import Build
@@ -6,6 +6,8 @@ from models.result import Result
 from models.test_run import TestRun
 from models.test import Test
 from models.project import Project
+
+from flask_apidoc import ApiDoc
 
 # Blueprints
 from api.api import api, get_project_by_id_or_name
@@ -21,35 +23,42 @@ app.register_blueprint(api)
 
 dtb = db.init_app(app)
 
+doc = ApiDoc(app=app)
+
 
 @app.route('/')
+@app.route('/projects')
 def index():
     projects = Project.query.all()
     return render_template('index.html', title='Home', projects=projects)
 
-@app.route('/projects/<int:project_id>', methods=['GET'])
-@app.route('/projects/<string:project_name>', methods=['GET'])
+
+@app.route('/projects/<int:project_id>/builds', methods=['GET'])
+@app.route('/projects/<string:project_name>/builds', methods=['GET'])
 def get_project(project_id=None, project_name=None):
     project = get_project_by_id_or_name(project_id, project_name)
     if not project:
         abort(404)
     return render_template('project.html', title='Project', project=project)
 
-@app.route('/projects/<int:project_id>/builds/<build_nr>', methods=['GET'])
-@app.route('/projects/<string:project_name>/builds/<build_nr>', methods=['GET'])
+
+@app.route('/projects/<int:project_id>/builds/<build_nr>/runs', methods=['GET'])
+@app.route('/projects/<string:project_name>/builds/<build_nr>/runs', methods=['GET'])
 def get_build(build_nr, project_id=None, project_name=None):
     project = get_project_by_id_or_name(project_id, project_name)
     build = Build.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
     return render_template('build.html', title='Build', build=build, project=project)
 
-@app.route('/projects/<int:project_id>/builds/<build_nr>/runs/<test_run_id>', methods=['GET'])
-@app.route('/projects/<string:project_name>/builds/<build_nr>/runs/<test_run_id>', methods=['GET'])
+
+@app.route('/projects/<int:project_id>/builds/<build_nr>/runs/<test_run_id>/results', methods=['GET'])
+@app.route('/projects/<string:project_name>/builds/<build_nr>/runs/<test_run_id>/results', methods=['GET'])
 def get_run(build_nr, test_run_id, project_id=None, project_name=None):
     project = get_project_by_id_or_name(project_id, project_name)
     build = Build.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
     test_run = TestRun.query.filter_by(id=test_run_id, build_nr=build_nr).first_or_404()
-    test_results = Test
-    return render_template('test_run.html', title='Test Run', build=build, project=project, test_run=test_run)
+    test_results = Result.query.filter_by(test_run_id=test_run_id).join(Test, Test.id == Result.test_id).all()
+    return render_template('test_run.html', title='Test Run', build=build, project=project, test_run=test_run,
+                           test_results=test_results)
 
 
 @app.route('/report/<test_run_id>', methods=['GET'])
@@ -95,10 +104,12 @@ def save_test_list(test_run_id):
     response.headers['Content-Type'] = 'application/json'
     return response
 
+
 #  Error handlers
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
 
 if __name__ == '__main__':
     host = '0.0.0.0'

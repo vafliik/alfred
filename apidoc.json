@@ -1,0 +1,7 @@
+{
+  "name": "Alfred REST API",
+  "version": "1.0.0",
+  "description": "Alfred REST API example",
+  "title": "Alfred REST API example",
+  "url" : "http://localhost:5001"
+}

@@ -9,10 +9,35 @@ from models.project import Project
 
 api = Blueprint("api", "api", url_prefix="/api/v1")
 
+
 # PROJECTS
 
 @api.route('/projects', methods=['GET'])
 def get_projects():
+    """
+    @api {get} /projects List All Projects
+    @apiVersion 1.0.0
+    @apiName get_projects
+    @apiGroup Project
+    @apiSuccess {Object[]} projects Project list
+    @apiSuccess {Number}    projects.id  Project id
+    @apiSuccess {String}    projects.name  Project name
+    @apiSuccess {Number}    projects.builds_count  Number of builds
+    @apiSuccessExample {json} Success-Response:
+        HTTP/1.1 200 OK
+        [
+            {
+              "id": 1,
+              "name": "Huma",
+              "builds_count": 13
+            },
+            {
+              "id": 2,
+              "name": "LetzNav",
+              "builds_count": 36
+            }
+        ]
+    """
     project_list = []
     projects = Project.query.all()
     for project in projects:
@@ -24,12 +49,27 @@ def get_projects():
             }
         )
 
-    return jsonify(projects=project_list)
+    return jsonify(project_list)
 
 
 @api.route('/projects/<int:project_id>', methods=['GET'])
 @api.route('/projects/<string:project_name>', methods=['GET'])
 def get_project(project_id=None, project_name=None):
+    """
+    @api {get} /projects/:project Get a Project
+    @apiVersion 1.0.0
+    @apiName get_project
+    @apiGroup Project
+    @apiDescription The :project parameter can be either project name or project id
+    @apiSuccess {Number}    id  Project id
+    @apiSuccess {String}    name  Project name
+    @apiSuccessExample {json} Success-Response:
+        HTTP/1.1 200 OK
+        {
+          "id": 15,
+          "name": "New Project"
+        }
+    """
     project = get_project_by_id_or_name(project_id, project_name)
     if not project:
         abort(404)
@@ -39,6 +79,27 @@ def get_project(project_id=None, project_name=None):
 
 @api.route('/projects', methods=['POST'])
 def create_project():
+    """
+    @api {post} /projects Create a New Project
+    @apiVersion 1.0.0
+    @apiName create_project
+    @apiGroup Project
+    @apiParam {String}      name Project name
+    @apiParamExample {json} Input
+        {
+          "name": "New Project"
+        }
+    @apiSuccess {Number}    id  Project id
+    @apiSuccess {String}    name  Project name
+    @apiSuccess {Number}    builds_count  Number of builds
+    @apiSuccessExample {json} Success-Response:
+        HTTP/1.1 200 OK
+        {
+          "id": 15,
+          "name": "New Project",
+          "builds_count": 0
+        }
+    """
     payload = request.json
     name = payload.get("name")
 
@@ -50,11 +111,39 @@ def create_project():
 @api.route('/projects/<int:project_id>', methods=['PATCH'])
 @api.route('/projects/<string:project_name>', methods=['PATCH'])
 def update_project(project_id=None, project_name=None):
+    """
+    @api {patch} /projects/:project Update a Project
+    @apiVersion 1.0.0
+    @apiName update_project
+    @apiGroup Project
+    @apiDescription The :project parameter can be either project name or project id
+    @apiParam {String}      name Project name
+    @apiParamExample {json} Input
+        {
+          "name": "New Project Name"
+        }
+    @apiSuccess {Number}    id  Project id
+    @apiSuccess {String}    name  Project name
+    @apiSuccessExample {json} Success-Response:
+        HTTP/1.1 200 OK
+        {
+          "id": 15,
+          "name": "New Project Name"
+        }
+    @apiErrorExample {json} Error-Response:
+        HTTP/1.1 404 Not Found
+        {
+          "message": "Project not found"
+        }
+    """
     project = get_project_by_id_or_name(project_id, project_name)
-    payload = request.json
-    project.name = payload.get("name")
-    db.session.commit()
-    return jsonify(id=project.id, name=project.name), 200
+    if not project:
+        return jsonify(message="Project not found"), 404
+    else:
+        payload = request.json
+        project.name = payload.get("name")
+        db.session.commit()
+        return jsonify(id=project.id, name=project.name), 200
 
 
 # BUILDS
@@ -62,6 +151,30 @@ def update_project(project_id=None, project_name=None):
 @api.route('/projects/<int:project_id>/builds', methods=['GET'])
 @api.route('/projects/<string:project_name>/builds', methods=['GET'])
 def get_builds(project_id=None, project_name=None):
+    """
+     @api {get} /projects/:project_id/builds List All Builds of a Project
+     @apiVersion 1.0.0
+     @apiName get_builds
+     @apiGroup Build
+     @apiSuccess {Object[]} builds Builds list
+     @apiSuccess {Number}    builds.build_nr  Build number
+     @apiSuccess {String}    builds.comment  Build comment
+     @apiSuccess {Date}    builds.created  Date created
+     @apiSuccessExample {json} Success-Response:
+         HTTP/1.1 200 OK
+         [
+             {
+               "build_nr": 1,
+               "comment": "Build manually",
+               "created": "Fri, 15 Dec 2017 10:43:52 GMT"
+             },
+             {
+               "build_nr": 2,
+               "comment": "CCI build",
+               "created": "Sat, 16 Dec 2017 11:20:12 GMT"
+             }
+         ]
+    """
     project = get_project_by_id_or_name(project_id, project_name)
     build_list = []
     builds = project.builds
@@ -74,7 +187,7 @@ def get_builds(project_id=None, project_name=None):
             }
         )
 
-    return jsonify(builds=build_list)
+    return jsonify(build_list)
 
 
 @api.route('/projects/<int:project_id>/builds/<build_nr>', methods=['GET'])
@@ -110,6 +223,7 @@ def update_build(build_nr, project_id=None, project_name=None):
     build.comment = payload.get("comment")
     db.session.commit()
     return jsonify(build_nr=build.build_nr, comment=build.comment), 200
+
 
 # TEST RUNS
 @api.route('/projects/<int:project_id>/builds/<build_nr>/runs', methods=['POST'])

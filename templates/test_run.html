@@ -15,10 +15,10 @@
             <th>Duration</th>
         </tr>
         </thead>
-        {% for result in test_run.results %}
+        {% for result in test_results %}
             <tr>
                 <td>{{ result.id }}</td>
-                <td>{{ result.test_id }}</td>
+                <td>{{ result.test.name }}</td>
                 <td>{{ result.status }}</td>
                 <td>TBD</td>
                 <td><a href="{{ url_for('get_build', build_nr=build.build_nr, project_id=project.id) }}"
