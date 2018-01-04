@@ -1,5 +1,5 @@
 from flask import Flask, render_template, make_response, request, jsonify, abort, send_from_directory
-from flask_googlecharts import GoogleCharts, BarChart
+from flask_googlecharts import GoogleCharts, BarChart, LineChart
 
 from database import db, get_or_create
 from models.build import Build
@@ -34,14 +34,16 @@ charts = GoogleCharts(app)
 @app.route('/')
 @app.route('/projects')
 def index():
-    hot_dog_chart = BarChart("hot_dog_chart", options={'title': 'My Chart'})
-    hot_dog_chart.add_column("string", "Competitor")
-    hot_dog_chart.add_column("number", "Hot Dogs")
-    hot_dog_chart.add_rows([["Matthew Stonie", 62],
-                            ["Joey Chestnut", 60],
-                            ["Eater X", 35.5],
-                            ["Erik Denmark", 33],
-                            ["Adrian Morgan", 31]])
+    hot_dog_chart = LineChart("hot_dog_chart", options={'curveType': 'function', 'legend': {'position': 'none'}})
+    # hot_dog_chart.add_column("string", "TestRun Run")
+    hot_dog_chart.add_column("number", "Day")
+    hot_dog_chart.add_column("number", "Pass")
+    hot_dog_chart.add_column("number", "Fail")
+    hot_dog_chart.add_rows([["1", 62, 30],
+                            ["2", 60, 32],
+                            ["3", 36, 56],
+                            ["4", 33, 53],
+                            ["5", 31, 70]])
 
     charts.register(hot_dog_chart)
 

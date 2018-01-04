@@ -3,3 +3,5 @@ flask-sqlalchemy
 flask-apidoc
 psycopg2
 Flask-GoogleCharts
+
+#https://github.com/wikkiewikkie/flask-googlecharts/issues/2
