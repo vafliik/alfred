@@ -1,4 +1,5 @@
 from flask import Flask, render_template, make_response, request, jsonify, abort, send_from_directory
+from flask_googlecharts import GoogleCharts, BarChart
 
 from database import db, get_or_create
 from models.build import Build
@@ -11,24 +12,39 @@ from flask_apidoc import ApiDoc
 
 # Blueprints
 from api.api import api, get_project_by_id_or_name
+from demo.demo import demo
 
 app = Flask("alfred")
 
 app.config.from_pyfile('flask.cfg')
 
+
 # allow routes like /projects as well as /projects/
 app.url_map.strict_slashes = False
 
 app.register_blueprint(api)
+app.register_blueprint(demo)
 
 dtb = db.init_app(app)
 
 doc = ApiDoc(app=app)
+charts = GoogleCharts(app)
 
 
 @app.route('/')
 @app.route('/projects')
 def index():
+    hot_dog_chart = BarChart("hot_dog_chart", options={'title': 'My Chart'})
+    hot_dog_chart.add_column("string", "Competitor")
+    hot_dog_chart.add_column("number", "Hot Dogs")
+    hot_dog_chart.add_rows([["Matthew Stonie", 62],
+                            ["Joey Chestnut", 60],
+                            ["Eater X", 35.5],
+                            ["Erik Denmark", 33],
+                            ["Adrian Morgan", 31]])
+
+    charts.register(hot_dog_chart)
+
     projects = Project.query.all()
     return render_template('index.html', title='Home', projects=projects)
 

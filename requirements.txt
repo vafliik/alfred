@@ -1,0 +1,5 @@
+flask
+flask-sqlalchemy
+flask-apidoc
+psycopg2
+Flask-GoogleCharts
