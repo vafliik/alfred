@@ -1,105 +1,123 @@
 {% extends "layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-Hello Alfred. What Project do we have here? Does it come in black?
+    <h2>Alfred QA server</h2>
+    <p class="lead">Hello Alfred. What Project do we have here? Does it come in black?</p>
 
-<!--<table style="width:90%" class="table">-->
-<!--<thead>-->
+    <!--<table style="width:90%" class="table">-->
+    <!--<thead>-->
 
-<!--<tr>-->
-<!--<th>ID</th>-->
-<!--<th>Name</th>-->
-<!--<th>Builds</th>-->
-<!--</tr>-->
-<!--</thead>-->
-<!--{% for project in projects %}-->
-<!--<tr>-->
-<!--<td>{{ project.id }}</td>-->
-<!--<td>{{ project.name }}</td>-->
-<!--<td>{{ project.builds|length }}</td>-->
-<!--<td><a href="{{ url_for('get_project', project_id=project.id) }}"-->
-<!--class="btn btn-small btn-primary">Details</a></td>-->
-<!--</tr>-->
-<!--{% endfor %}-->
-<!--</table>-->
+    <!--<tr>-->
+    <!--<th>ID</th>-->
+    <!--<th>Name</th>-->
+    <!--<th>Builds</th>-->
+    <!--</tr>-->
+    <!--</thead>-->
+    <!--{% for project in projects %}-->
+        <!--<tr>-->
+        <!--<td>{{ project.id }}</td>-->
+        <!--<td>{{ project.name }}</td>-->
+        <!--<td>{{ project.builds|length }}</td>-->
+        <!--<td><a href="{{ url_for('get_project', project_id=project.id) }}"-->
+        <!--class="btn btn-small btn-primary">Details</a></td>-->
+        <!--</tr>-->
+        <!--{% endfor %}-->
+    <!--</table>-->
 
 
-<!--https://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items-->
+    <!--https://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items-->
 
-<div class="card-deck">
-    <div class="card border-success">
-        <div class="card-body">
-            <h5 class="card-title">HUMA</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text text-success">Some quick example text to build on the card title and make up the bulk of
-                the card's content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+    <div class="card-deck">
+        <div class="card border-success">
+            <div class="card-body">
+                <h5 class="card-title">HUMA</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Design with AI</h6>
+                <small><a href="#" class="card-link">GitHub</a></small>
+                <small><a href="#" class="card-link">Confluence</a></small>
+                <small><a href="#" class="card-link">JIRA</a></small>
+            </div>
+            <div class="card-body">
+                <p class="card-text text-success">Tests passing</p>
+                {{ charts.pass_chart }}
+                <p class="card-text text-center"><a href="#" class="btn btn-primary">View Test Runs</a></p>
+            </div>
+            <div class="card-footer">
+                Test run <a href="#">#234</a> in progress
+            </div>
         </div>
-        <div class="card-body">
-            {{ charts.hot_dog_chart }}
-        </div>
-    </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">HUMA</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+        <div class="card border-danger">
+            <div class="card-body">
+                <h5 class="card-title">nDimensional</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Charts with dimensions or something like that</h6>
+                <small><a href="#" class="card-link">GitHub</a></small>
+                <small><a href="#" class="card-link">Confluence</a></small>
+                <small><a href="#" class="card-link">JIRA</a></small>
+            </div>
+            <div class="card-body">
+                <p class="card-text text-danger">Tests failing</p>
+                {{ charts.fail_chart }}
+                <p class="card-text text-center"><a href="#" class="btn btn-primary">View Test Runs</a></p>
+            </div>
+            <div class="card-footer">
+                Test run <a href="#">#234</a> in progress
+            </div>
         </div>
-        <div class="card-body">
-            {{ charts.hot_dog_chart }}
-        </div>
-    </div>
 
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">HUMA</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-        </div>
-        <div class="card-body">
-            {{ charts.hot_dog_chart }}
-        </div>
-    </div>
-</div>
-
-<div class="card-deck mt-3">
-    <div class="card border-success">
-        <div class="card-body">
-            <h5 class="card-title">HUMA</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text text-success">Some quick example text to build on the card title and make up the bulk of
-                the card's content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-        </div>
-        <div class="card-body">
-            {{ charts.hot_dog_chart }}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">HUMA</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's
+                    content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+            <div class="card-body">
+                {{ charts.hot_dog_chart }}
+            </div>
+            <div class="card-footer">
+                Last test run <a href="#">2 days ago</a>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">HUMA</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+    <div class="card-deck mt-3">
+        <div class="card border-success">
+            <div class="card-body">
+                <h5 class="card-title">HUMA</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text text-success">Some quick example text to build on the card title and make up the
+                    bulk of
+                    the card's content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+            <div class="card-body">
+                {{ charts.hot_dog_chart }}
+            </div>
         </div>
-        <div class="card-body">
-            {{ charts.hot_dog_chart }}
-        </div>
-    </div>
 
-</div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">HUMA</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's
+                    content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+            <div class="card-body">
+                {{ charts.hot_dog_chart }}
+            </div>
+            <div class="card-footer text-muted">
+                No test run yet
+            </div>
+        </div>
+
+    </div>
 
 {% endblock %}

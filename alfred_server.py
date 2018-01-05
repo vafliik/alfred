@@ -34,18 +34,29 @@ charts = GoogleCharts(app)
 @app.route('/')
 @app.route('/projects')
 def index():
-    hot_dog_chart = LineChart("hot_dog_chart", options={'curveType': 'function', 'legend': {'position': 'none'}})
-    # hot_dog_chart.add_column("string", "TestRun Run")
-    hot_dog_chart.add_column("number", "Day")
-    hot_dog_chart.add_column("number", "Pass")
-    hot_dog_chart.add_column("number", "Fail")
-    hot_dog_chart.add_rows([["1", 62, 30],
+    pass_chart = LineChart("pass_chart", options={'colors': ['green', 'red'], 'curveType': 'function', 'legend': {'position': 'none'}})
+    pass_chart.add_column("number", "Day")
+    pass_chart.add_column("number", "Pass")
+    pass_chart.add_column("number", "Fail")
+    pass_chart.add_rows([["1", 62, 30],
                             ["2", 60, 32],
                             ["3", 36, 56],
                             ["4", 33, 53],
-                            ["5", 31, 70]])
+                            ["5", 79, 0]])
 
-    charts.register(hot_dog_chart)
+    charts.register(pass_chart)
+
+    fail_chart = LineChart("fail_chart", options={'curveType': 'function', 'legend': {'position': 'none'}})
+    fail_chart.add_column("number", "Day")
+    fail_chart.add_column("number", "Pass")
+    fail_chart.add_column("number", "Fail")
+    fail_chart.add_rows([["1", 53, 10],
+                            ["2", 70, 22],
+                            ["3", 36, 56],
+                            ["4", 10, 63],
+                            ["5", 0, 85]])
+
+    charts.register(fail_chart)
 
     projects = Project.query.all()
     return render_template('index.html', title='Home', projects=projects)
