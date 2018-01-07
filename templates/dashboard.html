@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div class="row mt-3">
+    <div class="col">
+        <h2>Test Runs</h2>
+    </div>
+    <div class="col text-right">
+        <div class="btn-group">
+            <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                HUMA
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">nDimensional</a>
+                <a class="dropdown-item" href="#">Ordamo</a>
+                <a class="dropdown-item" href="#">FPA</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-3">
+        <div class="pre-scrollable">
+            <table class="table table-sm">
+                <tbody>
+                <tr>
+                    <td style="color: green"><i class="fas fa-check-circle"></i></td>
+                    <td>master</td>
+                </tr>
+                <tr>
+                    <td style="color: red"><i class="fas fa-minus-circle"></i></td>
+                    <td>develop</td>
+                </tr>
+                <tr>
+                    <td style="color: green"><i class="fas fa-check-circle"></i></td>
+                    <td>test_branch</td>
+                </tr>
+                <tr>
+                    <td style="color: green"><i class="fas fa-check-circle"></i></td>
+                    <td>qa_fix</td>
+                </tr>
+                <tr>
+                    <td style="color: green"><i class="fas fa-check-circle"></i></td>
+                    <td>new_dashboard</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="row">
+            <div class="col-1">
+                <button type="button" class="btn btn-success btn-sm"><i class="fas fa-check-circle"></i> PASS</button>
+            </div>
+            <div class="col-7">
+                <strong>master #1234</strong>
+                <div class="recent-commit-msg">
+                    <div>
+                        <img style="float:left; width: 15px; height: 15px"
+                             src="https://avatars3.githubusercontent.com/u/1366790?s=40&amp;v=4">
+                    </div>
+                    <span title="commit message" class="small">QA|Update expected default appbar height</span></div>
+            </div>
+            <div class="col-4">
+                <table class="table table-sm border-top-0">
+                    <tbody>
+                    <tr>
+                        <td class="border-top-0"><i style="color: #808080" class="fas fa-clock"></i> <span class="small">2 days ago</span></td>
+                        <td class="border-top-0" title="Duration"><i style="color: #808080" class="fas fa-stopwatch"></i> <span class="small">15:23</span></td>
+                    </tr>
+                    <tr>
+                        <td class="border-top-0" title="Pull Request"></td>
+                        <td class="border-top-0"><i style="color: #808080" class="fas fa-code-branch"></i> <span class="small"><a href="#">15cae465</a></span></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="row" style="border: 1px solid">
+            <div class="col-1 pt-3">
+                <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-minus-circle"></i> FAIL</button>
+            </div>
+            <div class="col-7 pt-2">
+                <strong>#1233</strong> <i style="color: #808080" class="fas fa-code-branch"></i> <a href="#">develop</a>
+                <div class="recent-commit-msg">
+                    <div>
+                        <img style="float:left; width: 20px; height: 20px"
+                             src="https://avatars3.githubusercontent.com/u/1366790?s=40&amp;v=4">
+                    </div>
+                    &nbsp;
+                    <span title="commit message" class="small">QA|Update expected default appbar height</span></div>
+            </div>
+            <div class="col-4">
+                <table class="table table-sm">
+                    <tbody>
+                    <tr>
+                        <td class="border-top-0"><i style="color: #808080" class="fas fa-clock"></i> <span class="small">2 days ago</span></td>
+                        <td class="border-top-0" title="Duration"><i style="color: #808080" class="fas fa-stopwatch"></i> <span class="small">15:23</span></td>
+                    </tr>
+                    <tr>
+                        <td class="border-top-0" title="Pull Request"><i style="color: #808080" class="fab fa-github"></i> <span class="small"><a href="#">#347</a></span></td>
+                        <td class="border-top-0"><i style="color: #808080" class="fas fa-code"></i> <span class="small"><a href="#">15cae465</a></span></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

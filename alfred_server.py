@@ -61,6 +61,9 @@ def index():
     projects = Project.query.all()
     return render_template('index.html', title='Home', projects=projects)
 
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/projects/<int:project_id>/builds', methods=['GET'])
 @app.route('/projects/<string:project_name>/builds', methods=['GET'])
