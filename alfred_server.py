@@ -118,25 +118,6 @@ def start_test_run(build_nr):
     response.headers['Content-Type'] = 'application/json'
     return response
 
-
-@app.route('/tests/<test_run_id>', methods=['POST'])
-def save_test_list(test_run_id):
-    test_run = TestRun.query.get(test_run_id)
-
-    test_names = request.json
-
-    for test_name in test_names:
-        test = get_or_create(db.session, Test, name=test_name)
-        db.session.add(test)
-        result = Result(test_run.id, test.id, status="Not run")
-        db.session.add(result)
-
-    db.session.commit()
-    response = make_response('{{"test_added": {}}}'.format(len(test_names)))
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
-
 #  Error handlers
 @app.errorhandler(404)
 def page_not_found(e):

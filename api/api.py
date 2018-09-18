@@ -224,19 +224,37 @@ def update_build(build_nr, project_id=None, project_name=None):
     db.session.commit()
     return jsonify(build_nr=build.build_nr, comment=build.comment), 200
 
+# TESTS
+@api.route('/projects/<int:project_id>/tests', methods=['POST'])
+def save_test_list(project_id):
+    test_names = request.json['test_names']
+    test_run_id = request.json.get('test_run_id')
+
+    for test_name in test_names:
+        test = get_or_create(db.session, Test, project_id=project_id, name=test_name)
+        if test_run_id:
+            result = Result(test_run_id, test.id, status="Not run")
+            db.session.add(result)
+
+    db.session.commit()
+    response = make_response('{{"test_added": {}}}'.format(len(test_names)))
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 # TEST RUNS
 @api.route('/projects/<int:project_id>/builds/<build_nr>/runs', methods=['POST'])
 @api.route('/projects/<string:project_name>/builds/<build_nr>/runs', methods=['POST'])
 def create_run(build_nr, project_id=None, project_name=None):
-    project = get_project_by_id_or_name(project_id, project_name)
-    build = Build.query.filter_by(project_id=project.id, build_nr=build_nr).first_or_404()
+    build = Build.query.filter_by(project_id=project_id, build_nr=build_nr).first_or_404()
     payload = request.json
     status = payload.get("status")
     comment = payload.get("comment")
 
-    run = get_or_create(db.session, TestRun, build_nr=build_nr, status=status)
+    run = TestRun(status=status)
     run.comment = comment
+    build.test_runs.append(run)
+    db.session.add(build)
+    db.session.add(run)
     db.session.commit()
     return jsonify(id=run.id, comment=run.comment), 201
 
