@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, request, jsonify, Blueprint, abort
+from flask import Flask, render_template, make_response, request, jsonify, Blueprint, abort, current_app
 
 from database import db, get_or_create
 from models.build import Build
@@ -241,6 +241,17 @@ def save_test_list(project_id):
     response.headers['Content-Type'] = 'application/json'
     return response
 
+@api.route('/projects/<int:project_id>/results/<test_run_id>/<test_name>', methods=['PATCH'])
+def update_test_result(project_id, test_run_id, test_name):
+    payload = request.json
+    status = payload.get("status")
+    test = db.session.query(Test).filter_by(project_id=project_id, name=test_name).first()
+    result = get_or_create(db.session, Result, test_run_id=test_run_id, test_id=test.id)
+    result.status = status
+    db.session.add(result)
+    db.session.commit()
+    return '', 204
+
 # TEST RUNS
 @api.route('/projects/<int:project_id>/builds/<build_nr>/runs', methods=['POST'])
 @api.route('/projects/<string:project_name>/builds/<build_nr>/runs', methods=['POST'])
@@ -258,6 +269,28 @@ def create_run(build_nr, project_id=None, project_name=None):
     db.session.commit()
     return jsonify(id=run.id, comment=run.comment), 201
 
+# Results
+@api.route('/projects/<int:project_id>/builds/<build_nr>/runs/<test_run_id>', methods=['PATCH'])
+def update_test_run_result(project_id, build_nr, test_run_id):
+    payload = request.json
+    status = payload.get("status")
+    comment = payload.get("comment")
+    test_run = TestRun.query.filter_by(id=test_run_id).first_or_404()
+    test_run.status = status
+    test_run.comment = comment
+    # db.session.add(test_run)
+    db.session.commit()
+    return '', 204
+
+@api.route("/site-map")
+def site_map():
+    links = []
+    for rule in current_app.url_map.iter_rules():
+        # Filter out rules we can't navigate to in a browser
+        # and rules that require parameters
+        # url = url_for(rule.endpoint, **(rule.defaults or {}))
+        links.append((str(rule), ",".join(rule.methods)))
+    return jsonify(links)
 
 # Utils
 
